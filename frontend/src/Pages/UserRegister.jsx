@@ -37,7 +37,7 @@ const UserRegister = () => {
         try {
             await createUser({ ...userData});
             toast.success('User created successfully!');
-            navigate('/users');
+            navigate('/login');
         } catch (error) {
             if (error.response && error.response.status === 409) {
                 toast.error('Email already in use');
@@ -82,7 +82,7 @@ const UserRegister = () => {
                         value={userData.age}
                         onChange={handleChange}
                         className="form-control"
-                        placeholder="Enter username"
+                        placeholder="Enter age"
                     />
                 </div>
                 <div className="form-group mb-3">

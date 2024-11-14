@@ -1,30 +1,38 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Nav from './Components/Nav';
-// import AddProduct from './Pages/AddProduct';
-// import ProductList from './Pages/ProductList';
-// import UpdateProduct from './Pages/UpdateProduct';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import Profile from './Pages/Profile';
+import Todo from './Pages/Todo'; 
+import UserLogin from './Pages/UserLogin';
 import UserRegister from './Pages/UserRegister';
-// import Login from './Pages/Auth/Login';
-// import UserList from './Pages/UserList';
-// import UpdateUser from './Pages/UpdateUser';
+import ProtectedRoute from './Components/ProtectedRoute';
+import Nav from './Components/Nav';
+import AllTodos from './Pages/AllTodos';
 
 function App() {
+    const authToken = localStorage.getItem('authToken');
+
     return (
-        <Router>
-            <Nav />
-            <div style={{ padding: '2rem' }}>
-                <Routes>
-                    {/* <Route path="/" element={<ProductList />} />
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/add" element={<AddProduct />} />
-                    <Route path="/edit/:id" element={<UpdateProduct />} />
-                    <Route path="/users" element={<UserList />} /> */}
-                    <Route path="/register" element={<UserRegister />} />
-                    {/* <Route path="/edituser/:id" element={<UpdateUser />} /> */}
-                </Routes>
-            </div>
-        </Router>
+
+        <BrowserRouter>
+        <Nav />
+            <Routes>
+            
+                
+                {/*Yeh public routes hain application k */}
+                <Route path="/login" element={!authToken ? <UserLogin /> : <Navigate to="/profile" />} />
+                <Route path="/register" element={!authToken ? <UserRegister /> : <Navigate to="/profile" />} />
+
+                {/*Yeh protected routes hain application k */}
+                <Route element={<ProtectedRoute />}>
+                    <Route path="/" element={<Todo />} />
+                    <Route path="/alltodos" element={<AllTodos />} />
+                    <Route path="/profile" element={<Profile />} />
+                </Route>
+
+                {/* Redirect to /profile if logged in, warna /login */}
+                <Route path="*" element={<Navigate to={authToken ? "/profile" : "/login"} />} />
+            </Routes>
+        </BrowserRouter>
     );
 }
 
